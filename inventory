@@ -1,2 +1,2 @@
-192.168.75.129
+mach1@192.168.75.129 ansible_ssh_pass=root ansible_become_pass=root
 
