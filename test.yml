@@ -1,0 +1,36 @@
+---
+- name: Download lynis
+  hosts: ansible_client
+  remote_user: root
+  become: true
+  tasks:
+    - name: make lynis dir 
+      ansible.builtin.file:
+       path: /home/lynis
+       state: directory
+       mode: '0777'
+    - name: get lynis from git
+      ansible.builtin.git:
+        repo: 'https://github.com/CISOfy/lynis'
+        dest: /home/lynis/
+    - name: make log directory
+      ansible.builtin.file:
+        path: /home/lynis/log
+        state: directory
+        mode: '0777'
+    - name: start the lynis service
+      ansible.builtin.shell:
+        cmd: cd /home/lynis/; ./lynis audit system --quick --report-file /home/lynis/log/lynis-report.dat --logfile /home/lynis/log/lynis.log > /home/lynis/log/output.log
+    - name: find files to copy
+      find:
+        paths: /home/lynis/log/
+        patterns: "*"
+      register: files_to_copy
+    - name: copy from lynius log and profile to host machine
+      ansible.builtin.fetch:
+        src: "/home/lynis/log/output.log"
+        dest: /home/kali/Desktop/milan/{{ ansible_facts['default_ipv4']['address'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}-{{ ansible_facts['date_time']['minute'] }}/
+        flat: yes
+        with_items:
+          - "{{ files_to_copy.files }}"
+
