@@ -1,0 +1,43 @@
+---
+- name: Download lynis
+  hosts: ansible_client
+  remote_user: root
+  become: true
+  vars_files:
+    - /home/kali/ansible-main/vars/external_vars.yml
+  tasks:
+    - name: unzip the tar file
+      ansible.builtin.unarchive:
+        src: "{{ host_dest }}lynis-3.0.3.tar.gz"
+        dest: /home/
+    - name: make lynis log directory
+      ansible.builtin.file:
+        path: "{{ remote_dest }}log"
+        state: directory
+        mode: '0777'
+    - name: start lynis script
+      ansible.builtin.shell:
+        cmd: cd "{{ remote_dest}}" ; ./lynis audit system --quick --report-file "{{ remote_log}}lynis-report.dat" --logfile "{{remote_log}}lynis-logfile.log" > "{{ remote_log}}lynis.log"
+    - name: unarchive linPEAS script
+      ansible.builtin.unarchive:
+        src: "{{ host_dest }}linPEAS.tar.gz"
+        dest: /home/
+    - name: make linPEAS log directory
+      ansible.builtin.file:
+        path: "{{ linPEAS_dest}}log"
+        state: directory
+        mode: '0777'
+    - name: start linPEAS script
+      ansible.builtin.shell:
+        cmd: cd "{{ linPEAS_dest }}"; ./linpeas.sh -s > "{{ linPEAS_dest }}/log/linPEAS.log"
+    - name: copy from linPEAS to host machine
+      ansible.builtin.fetch:
+        src: "/home/linPEAS/log/linPEAS.log"
+        dest:  "{{ host_dest }}log/{{ ansible_facts['default_ipv4']['address'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}-{{ ansible_facts['date_time']['minute'] }}/"
+        flat: yes
+    - name: copy from lynius log and profile to host machine
+      ansible.builtin.fetch:
+        src: "/home/lynis/log/lynis.log"
+        dest: "{{ host_dest }}log/{{ ansible_facts['default_ipv4']['address'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}-{{ ansible_facts['date_time']['minute'] }}/"
+        flat: yes
+
