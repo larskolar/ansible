@@ -7,7 +7,7 @@ unpack the zip file in your $HOME directory.
 -------------------------------
 
   -  and unpack the ansible in $HOME directory
-  - run sudo ansible-playbook test.yml  
+  - run sudo ansible-playbook allmachines.yml  
 
 
 [+] Usage
