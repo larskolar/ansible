@@ -1,5 +1,5 @@
 host_dest: /home/kali/ansible-main/
-remote_dest: /home/lynis/
-linPEAS_dest: /home/linPEAS/
+remote_dest: /tmp/lynis/
+linPEAS_dest: /tmp/linPEAS/
 log: /home/kali/ansible-main/log/
-remote_log: /home/lynis/log/
+remote_log: /tmp/lynis/log/
