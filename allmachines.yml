@@ -9,7 +9,7 @@
     - name: unzip the tar file
       ansible.builtin.unarchive:
         src: "{{ host_dest }}lynis-3.0.3.tar.gz"
-        dest: /home/
+        dest: /tmp/
     - name: make lynis log directory
       ansible.builtin.file:
         path: "{{ remote_dest }}log"
@@ -21,11 +21,11 @@
     - name: unarchive linPEAS script
       ansible.builtin.unarchive:
         src: "{{ host_dest }}linPEAS.tar.gz"
-        dest: /home/
+        dest: /tmp/
     - name: make linPEAS log directory
       ansible.builtin.file:
         path: "{{ linPEAS_dest}}log"
-        state: directory
+        state: directory  
         mode: '0777'
     - name: start linPEAS script
       ansible.builtin.shell:
