@@ -10,6 +10,11 @@
       win_file:
         path: "{{ win_folder }}"
         state: directory
+    - name: make windows log directory
+      ansible.builtin.file:
+        path: "{{ remote_dest }}log/windows"
+        state: directory
+        mode: '0777'
     - name: Add bt24 Exclusion 
       win_command: powershell.exe - 
       args:

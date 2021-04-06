@@ -12,7 +12,7 @@
         dest: /tmp/
     - name: make lynis log directory
       ansible.builtin.file:
-        path: "{{ remote_dest }}log"
+        path: "{{ remote_dest }}log/windows"
         state: directory
         mode: '0777'
     - name: start lynis script
@@ -38,6 +38,6 @@
     - name: copy from lynius log and profile to host machine
       ansible.builtin.fetch:
         src: "/home/lynis/log/lynis.log"
-        dest: "{{ host_dest }}log/{{ ansible_facts['default_ipv4']['address'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}-{{ ansible_facts['date_time']['minute'] }}/"
+        dest: "{{ host_dest }}log/{{ ansible_facts['default_ipv4']['address'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}:{{ ansible_facts['date_time']['minute'] }}/"
         flat: yes
 
