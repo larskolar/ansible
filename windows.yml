@@ -2,22 +2,38 @@
 - name: Download lynis
   hosts: windows
   remote_user: root
-  become: true
+  become: runas
+  vars_files:
+    - /home/kali/ansible-main/vars/external_vars.yml
   tasks:
-    - name: Disable Real time protection
-      win_shell: PowerShell Set-MpPreference -DisableRealtimeMonitoring 1
+    - name: Create bt24 directory
+      win_file:
+        path: "{{ win_folder }}"
+        state: directory
+    - name: Add bt24 Exclusion 
+      win_command: powershell.exe - 
+      args:
+        stdin: Add-MpPreference -ExclusionPath C:\bt24
+      become: yes
+      become: Administrator
+    - name: Add %appdata% exclusionPath
+      win_command: powershell.exe - 
+      args:
+        stdin: Add-MpPreference -ExclusionPath "{{ win_local }}"
+      become: yes
+      become: Administrator
     - name: copy the winPEAS to windows 
       win_copy:
-        src: /home/kali/ansible-main/winPEASx64.exe
-        dest: C:\Users\root\Desktop\winPEASx64.exe
+        src: "{{ host_dest }}winPEASx64.exe"
+        dest: "{{ win_folder }}winPEASx64.exe"
         mode: '0700'
           #  - name: execute command for colors in cmd
           # win_shell:
           # cmd: REG ADD HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1
     - name: execute the winPeasex64.exe
-      win_shell: C:\Users\root\Desktop\winPEASx64.exe cmd fast > outputWindows.txt
+      win_shell: "{{ win_folder }}winPEASx64.exe cmd fast > outputWindows.txt"
     - name: fetch the output log from winPease
       fetch:
-       src: C:/Users/root/outputWindows.txt 
-       dest: /home/kali/ansible-main/log/windows/logoutput.txt
+       src: "{{ win_folder }}outputWindows.txt" 
+       dest: "{{ host_dest }}log/{{ ansible_facts['ansible_default_ipv4']['address'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}-{{ ansible_facts['date_time']['minute'] }}/"
        flat: yes

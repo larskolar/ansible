@@ -1,0 +1,32 @@
+---
+- name: Download lynis
+  hosts: windows
+  remote_user: root
+  become: runas
+  gather_facts: True
+  vars_files:
+    - /home/kali/ansible-main/vars/external_vars.yml
+  tasks:
+    - name: Test hosts list
+      debug:
+        msg: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    - name: Create bt24 directory
+      win_file:
+        path: "{{ win_folder }}"
+        state: directory
+    - name: disable real time protection 
+      win_command: powershell.exe - 
+      args:
+        stdin: Add-MpPreference -ExclusionPath "C:\\bt24"
+      become: yes
+      become: Administrator
+    - name: copy the winPEAS to windows 
+      win_copy:
+        src: "{{ host_dest}}winPEASx64.exe"
+        dest: "{{ win_folder}}winPEASx64.exe"
+        mode: '0777'
+    - name: fetch the output log from winPease
+      fetch:
+       src: "{{ win_folder}}outputWindows.txt" 
+       dest: "{{ host_dest }}log/windows/{{ ansible_facts['ansible_eth0_ipv4']['address'] }}/test.txt"
+       flat: yes
