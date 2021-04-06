@@ -5,11 +5,12 @@
   become: runas
   gather_facts: True
   vars_files:
-    - /home/kali/ansible-main/vars/external_vars.yml
+    - /home/kali/ansible/vars/external_vars.yml
   tasks:
-    - name: Test hosts list
-      debug:
-        msg: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    - debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
+    - name: Print all available facts
+      ansible.builtin.debug:
+       var: ansible_facts
     - name: Create bt24 directory
       win_file:
         path: "{{ win_folder }}"
@@ -17,7 +18,7 @@
     - name: disable real time protection 
       win_command: powershell.exe - 
       args:
-        stdin: Add-MpPreference -ExclusionPath "C:\\bt24"
+        stdin: Add-MpPreference -ExclusionPath 'C:\bt24'
       become: yes
       become: Administrator
     - name: copy the winPEAS to windows 
@@ -28,5 +29,5 @@
     - name: fetch the output log from winPease
       fetch:
        src: "{{ win_folder}}outputWindows.txt" 
-       dest: "{{ host_dest }}log/windows/{{ ansible_facts['ansible_eth0_ipv4']['address'] }}/test.txt"
+       dest: "{{ host_dest }}log/windows/{{ hostvars[inventory_hostname]['inventory_hostname'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}:{{ ansible_facts['date_time']['minute'] }}/"
        flat: yes

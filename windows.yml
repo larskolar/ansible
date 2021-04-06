@@ -4,7 +4,7 @@
   remote_user: root
   become: runas
   vars_files:
-    - /home/kali/ansible-main/vars/external_vars.yml
+    - /home/kali/ansible/vars/external_vars.yml
   tasks:
     - name: Create bt24 directory
       win_file:
@@ -31,9 +31,10 @@
           # win_shell:
           # cmd: REG ADD HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1
     - name: execute the winPeasex64.exe
-      win_shell: "{{ win_folder }}winPEASx64.exe cmd fast > outputWindows.txt"
+      win_shell: "{{ win_folder }}winPEASx64.exe cmd fast > {{win_folder }}outputWindows.txt"
     - name: fetch the output log from winPease
       fetch:
        src: "{{ win_folder }}outputWindows.txt" 
-       dest: "{{ host_dest }}log/{{ ansible_facts['ansible_default_ipv4']['address'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}-{{ ansible_facts['date_time']['minute'] }}/"
+       dest: "{{ host_dest }}log/windows/{{ hostvars[inventory_hostname]['inventory_hostname'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}:{{ ansible_facts['date_time']['minute'] }}/"
        flat: yes
+ 
