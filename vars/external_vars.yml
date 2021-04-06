@@ -1,5 +1,7 @@
-host_dest: /home/kali/ansible-main/
+host_dest: /home/kali/ansible/
 remote_dest: /tmp/lynis/
 linPEAS_dest: /tmp/linPEAS/
-log: /home/kali/ansible-main/log/
+log: /home/kali/ansible/log/
 remote_log: /tmp/lynis/log/
+win_folder: C:\bt24\
+win_local: $env:LOCALAPPDATA\Temp
