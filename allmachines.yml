@@ -12,7 +12,7 @@
         dest: /tmp/
     - name: make lynis log directory
       ansible.builtin.file:
-        path: "{{ remote_dest }}log/windows"
+        path: "{{ remote_dest }}log"
         state: directory
         mode: '0777'
     - name: start lynis script
