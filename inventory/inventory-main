@@ -1,0 +1,7 @@
+ansible_connection=ssh
+
+# Set either cmd or powershell not both
+ansible_shell_type=cmd
+# ansible_shell_type=powershell
+[windows]
+10.20.60.81 ansible_connection=ssh ansible_shell_type=cmd ansible_password=toor
