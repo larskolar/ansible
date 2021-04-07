@@ -4,7 +4,7 @@
   remote_user: root
   become: true
   vars_files:
-    - /home/kali/ansible-main/vars/external_vars.yml
+    - /home/kali/ansible/vars/external_vars.yml
   tasks:
     - name: unzip the tar file
       ansible.builtin.unarchive:
