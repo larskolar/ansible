@@ -1,5 +1,0 @@
-
-[windows]
-192.168.34.161  ansible_connection=ssh ansible_shell_type=cmd ansible_ssh_user=$USER ansible_ssh_pass=$PASS ansible_become_pass=$PASS
-192.168.200.128 ansible_connection=ssh ansible_shell_type=cmd ansible_ssh_user=$USER ansible_ssh_pass=$PASS ansible_become_pass=$PASS
-
