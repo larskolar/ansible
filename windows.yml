@@ -21,7 +21,7 @@
       args:
         stdin: Add-MpPreference -ExclusionPath "{{ win_local }}"
       become: yes
-      become: Administrator
+      become: Administratorss
     - name: copy the winPEAS to windows 
       win_copy:
         src: "{{ host_dest }}winPEASx64.exe"
@@ -31,10 +31,10 @@
           # win_shell:
           # cmd: REG ADD HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1
     - name: execute the winPeasex64.exe
-      win_shell: "{{ win_folder }}winPEASx64.exe cmd fast > {{win_folder }}outputWindows.txt"
+      win_shell: 'cd C:\bt24\ ; .\winPEASx64.exe  log'
     - name: fetch the output log from winPease
       fetch:
-       src: "{{ win_folder }}outputWindows.txt" 
+       src: "{{ win_folder }}out.txt" 
        dest: "{{ host_dest }}log/windows/{{ hostvars[inventory_hostname]['inventory_hostname'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}:{{ ansible_facts['date_time']['minute'] }}/"
        flat: yes
     - name: remove %appdata%\local\temp exclusionPath
@@ -42,3 +42,8 @@
       args:
         stdin: Remove-MpPreference -ExclusionPath "{{ win_local }}"
       become: Administrator
+    - name: remove %appdata%\local\temp exclusionPath
+      win_command: powershell.exe -
+      args:
+        stdin: Remove-MpPreference -ExclusionPath C:\bt24
+      become: Administrator  
