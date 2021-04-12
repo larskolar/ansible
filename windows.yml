@@ -16,7 +16,7 @@
         stdin: Add-MpPreference -ExclusionPath C:\bt24
       become: yes
       become: Administrator
-    - name: Add %appdata% exclusionPath
+    - name: Add %appdata%\local\temp exclusionPath
       win_command: powershell.exe - 
       args:
         stdin: Add-MpPreference -ExclusionPath "{{ win_local }}"
@@ -37,4 +37,8 @@
        src: "{{ win_folder }}outputWindows.txt" 
        dest: "{{ host_dest }}log/windows/{{ hostvars[inventory_hostname]['inventory_hostname'] }}/{{ ansible_facts['date_time']['date'] }}-{{ ansible_facts['date_time']['hour'] }}:{{ ansible_facts['date_time']['minute'] }}/"
        flat: yes
- 
+    - name: remove %appdata%\local\temp exclusionPath
+      win_command: powershell.exe -
+      args:
+        stdin: Remove-MpPreference -ExclusionPath "{{ win_local }}"
+      become: Administrator
